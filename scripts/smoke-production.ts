@@ -8,8 +8,11 @@ const child = spawn(process.execPath, ['--import', 'tsx', 'server/index.ts'], {
     ...process.env,
     NODE_ENV: 'production',
     PORT: '3191',
-    PUBLIC_ORIGIN: origin,
+    PUBLIC_ORIGIN: '',
+    RENDER_EXTERNAL_URL: origin + '/',
     DATA_DIR: '.data/production-smoke',
+    TAVILY_API_KEY: '',
+    keyayham: '',
   },
   stdio: 'ignore',
   windowsHide: true,
@@ -29,12 +32,41 @@ try {
   assert(ready, 'Production server did not become ready');
   const html = await fetch(origin + '/');
   assert.equal(html.status, 200);
-  assert((await html.text()).includes('<div id="root"></div>'));
+  const document = await html.text();
+  assert(document.includes('<div id="root"></div>'));
+  assert(!document.includes('/client/main.tsx'), 'Production HTML must use built assets');
+  const assets = [...document.matchAll(/(?:src|href)="(\/assets\/[^"\s]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert(
+    assets.some((asset) => asset.endsWith('.js')),
+    'Built JavaScript missing',
+  );
+  assert(
+    assets.some((asset) => asset.endsWith('.css')),
+    'Built CSS missing',
+  );
+  for (const asset of assets) {
+    const response = await fetch(origin + asset);
+    assert.equal(response.status, 200, `Built asset failed: ${asset}`);
+    assert((await response.arrayBuffer()).byteLength > 0);
+  }
+  const logo = await fetch(origin + '/rasd-mark.svg');
+  assert.equal(logo.status, 200);
+  assert(logo.headers.get('content-type')?.includes('image/svg+xml'));
+  assert((await logo.text()).includes('<svg'));
   assert(html.headers.get('content-security-policy')?.includes("default-src 'self'"));
   const health = await fetch(origin + '/api/health');
   const cookie = health.headers.get('set-cookie')?.split(';')[0];
   assert(cookie);
   assert(health.headers.get('set-cookie')?.includes('Secure'));
+  const session = await fetch(origin + '/api/sessions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', cookie, Origin: origin },
+    body: JSON.stringify({ domain: 'employees' }),
+  });
+  assert.equal(session.status, 201, 'Render public-origin requests must succeed');
+  assert((await session.json()).id);
   const plan = {
     version: 1,
     domain: 'smoke',
@@ -57,7 +89,7 @@ try {
   };
   const start = await fetch(origin + '/api/jobs/generate', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', cookie },
+    headers: { 'Content-Type': 'application/json', cookie, Origin: origin },
     body: JSON.stringify(plan),
   });
   assert.equal(start.status, 200);
@@ -84,8 +116,12 @@ try {
     JSON.stringify({
       productionStartup: true,
       staticFrontend: true,
+      builtAssets: assets.length,
+      brandAsset: true,
       securityHeaders: true,
       secureCookie: true,
+      renderPublicOrigin: true,
+      sessionCreation: true,
       apiGeneration: true,
       downloadVerified: true,
     }),

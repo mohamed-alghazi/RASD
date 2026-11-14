@@ -27,6 +27,14 @@ Browser tests use an existing Chrome installation and dedicated ports 5187/3187.
 
 For a production start, build first, set `NODE_ENV=production` in the host environment, then run `npm start`. Fastify serves the built frontend and API together. `GET /api/health` reports readiness and provider configuration booleans, never credentials.
 
+## Deployment on Render
+
+Use the **complete repository source**, not the archived-only commit `44b3955`. That commit references `/client/main.tsx` but omits `client/`, `server/`, and `shared/`, so Vite cannot build it. The full source and latest research, UX, and emerald theme improvements must be merged into the branch Render deploys.
+
+Run Render as a **Node Web Service** from the repository root. Build with `npm ci --include=dev && npm run build`, start with `npm start`, set `NODE_ENV=production`, and check `/api/health`. The existing server honors Render's `PORT` and serves both the frontend and API. `.node-version` selects Node 24; dev dependencies are needed by the build and the existing `tsx` startup command.
+
+See [Render setup and verification](docs/RENDER.md) and the reference [render.yaml](render.yaml). Render's `RENDER_EXTERNAL_URL` supplies the public origin automatically; set `PUBLIC_ORIGIN` explicitly for a custom domain. Credentials belong in Render environment settings, never in Git. Adding the configuration does not publish the application.
+
 ## Provider credentials
 
 The selected cloud provider is **OpenRouter**, with an **NVIDIA** model required. No exact model is configured until the live catalog and authentication can be verified. The cloud environment bindings `keymohamed` and `keyayham` are mapped in memory to `OPENROUTER_API_KEY` and `TAVILY_API_KEY`; their values are never written to files.
