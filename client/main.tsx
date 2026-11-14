@@ -34,6 +34,7 @@ import {
   Downloads,
 } from './components';
 import './style.css';
+import './theme.css';
 import '@fontsource/ibm-plex-sans-arabic/400.css';
 import '@fontsource/ibm-plex-sans-arabic/500.css';
 import '@fontsource/ibm-plex-sans-arabic/600.css';
@@ -105,14 +106,13 @@ function App() {
     <div className="app">
       <header className="site-header">
         <button className="brand" aria-label="رصد الرئيسية" onClick={() => navigate('home')}>
-          <span className="brand-icon">
-            <span />
-            <span />
-            <span />
+          <img className="brand-mark" src="/rasd-mark.svg" alt="" width="52" height="52" />
+          <span className="brand-wordmark">
+            <strong lang="ar">رصد</strong>
+            <span lang="en" dir="ltr">
+              RASD
+            </span>
           </span>
-          <b>
-            رصد<span>RASD</span>
-          </b>
         </button>
         <nav id="main-nav" className={menu ? 'open' : ''}>
           <button className={page === 'home' ? 'selected' : ''} onClick={() => navigate('home')}>
