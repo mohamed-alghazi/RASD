@@ -6,7 +6,9 @@ export default defineConfig({
   workers: 1,
   use: {
     baseURL: 'http://127.0.0.1:5187',
-    channel: 'chrome',
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
+      : { channel: 'chrome' },
     headless: true,
     screenshot: 'only-on-failure',
   },
@@ -14,6 +16,9 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://127.0.0.1:5187',
     env: {
+      // Browser regressions exercise real operations without spending live research credits.
+      TAVILY_API_KEY: '',
+      keyayham: '',
       PORT: '3187',
       VITE_PORT: '5187',
       VITE_API_PORT: '3187',

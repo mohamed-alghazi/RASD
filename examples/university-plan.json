@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "domain": "university",
+  "seed": 42,
+  "tables": [
+    {
+      "name": "universities",
+      "count": 1,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "جامعة الإمام محمد بن سعود الإسلامية"
+          ]
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "الرياض"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "faculties",
+      "count": 2,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "university_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "كلية الهندسة",
+            "كلية علوم الحاسب والمعلومات"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "university_id"
+          ],
+          "table": "universities",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "departments",
+      "count": 4,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "faculty_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "الهندسة المدنية",
+            "علوم الحاسب",
+            "الهندسة الكهربائية",
+            "نظم المعلومات"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "faculty_id"
+          ],
+          "table": "faculties",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "students",
+      "count": 100,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "university_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "faculty_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "department_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "semantic": "name"
+        },
+        {
+          "name": "student_number",
+          "type": "string",
+          "nullable": false,
+          "semantic": "student_number"
+        },
+        {
+          "name": "admission_date",
+          "type": "date",
+          "nullable": false
+        },
+        {
+          "name": "allowance",
+          "type": "decimal",
+          "nullable": false,
+          "values": [
+            1000
+          ],
+          "precision": 8,
+          "scale": 2
+        },
+        {
+          "name": "allowance_eligible",
+          "type": "boolean",
+          "nullable": false,
+          "default": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [
+        [
+          "student_number"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "university_id"
+          ],
+          "table": "universities",
+          "references": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "faculty_id"
+          ],
+          "table": "faculties",
+          "references": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "department_id"
+          ],
+          "table": "departments",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "assumptions": [
+    "جميع السجلات اصطناعية؛ أرقام الاتصال غير مخصصة للاستخدام الفعلي.",
+    "القيم الاقتصادية تقديرات اختبار وليست إحصاءات سوقية رسمية."
+  ]
+}
