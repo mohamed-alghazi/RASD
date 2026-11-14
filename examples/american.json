@@ -1,0 +1,10 @@
+{
+  "departments": [{"id":1,"name":"Engineering"}],
+  "jobs": [{"id":1,"job_title":"Software engineer"}],
+  "employees": [{"id":1,"department_id":1,"job_id":1,"name":"John Smith","city":"New York","salary":8000.5,"experience":8}],
+  "customers": [{"id":1,"name":"Jane Doe","city":"Boston"}],
+  "products": [{"id":1,"name":"Keyboard","price":100.5,"currency":"USD"}],
+  "orders": [{"id":1,"customer_id":1,"total":180.9,"currency":"USD"}],
+  "order_items": [{"id":1,"order_id":1,"product_id":1,"quantity":2,"unit_price":100.5,"discount":0.1,"total":180.9}],
+  "payments": [{"id":1,"order_id":1,"amount":180.9,"currency":"USD"}]
+}

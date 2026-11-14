@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "domain": "employees",
+  "seed": 42,
+  "tables": [
+    {
+      "name": "companies",
+      "count": 1,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "شركة آفاق للمقاولات"
+          ]
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "nullable": false,
+          "semantic": "city"
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "departments",
+      "count": 5,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "company_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "الهندسة",
+            "المالية",
+            "التشغيل",
+            "الموارد البشرية",
+            "إدارة المشاريع"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "company_id"
+          ],
+          "table": "companies",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "employees",
+      "count": 100,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "company_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "department_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "semantic": "name"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "nullable": false,
+          "semantic": "email"
+        },
+        {
+          "name": "job_title",
+          "type": "string",
+          "nullable": false,
+          "semantic": "title"
+        },
+        {
+          "name": "experience",
+          "type": "integer",
+          "nullable": false,
+          "min": 0,
+          "max": 20,
+          "semantic": "experience"
+        },
+        {
+          "name": "salary",
+          "type": "decimal",
+          "nullable": false,
+          "semantic": "salary",
+          "min": 7000,
+          "max": 25000,
+          "precision": 10,
+          "scale": 2
+        },
+        {
+          "name": "birth_date",
+          "type": "date",
+          "nullable": false
+        },
+        {
+          "name": "hire_date",
+          "type": "date",
+          "nullable": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [
+        [
+          "email"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "company_id"
+          ],
+          "table": "companies",
+          "references": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "department_id"
+          ],
+          "table": "departments",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "projects",
+      "count": 10,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "company_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "تطوير البنية التحتية",
+            "تأهيل المرافق",
+            "مبنى الإدارة",
+            "تطوير المستودعات"
+          ]
+        },
+        {
+          "name": "start_date",
+          "type": "date",
+          "nullable": false
+        },
+        {
+          "name": "end_date",
+          "type": "date",
+          "nullable": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "company_id"
+          ],
+          "table": "companies",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "count": 200,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "project_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "employee_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "مراجعة المخططات",
+            "فحص الجودة",
+            "إعداد تقرير التنفيذ",
+            "تنسيق التوريد"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "جديد",
+            "قيد التنفيذ",
+            "مكتمل"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "project_id"
+          ],
+          "table": "projects",
+          "references": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "employee_id"
+          ],
+          "table": "employees",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "kind": "experience",
+      "table": "employees",
+      "field": "experience",
+      "percent": 30,
+      "threshold": 5
+    },
+    {
+      "kind": "chronology",
+      "table": "employees",
+      "before": "birth_date",
+      "after": "hire_date"
+    },
+    {
+      "kind": "chronology",
+      "table": "projects",
+      "before": "start_date",
+      "after": "end_date"
+    }
+  ],
+  "assumptions": [
+    "جميع السجلات اصطناعية؛ أرقام الاتصال غير مخصصة للاستخدام الفعلي.",
+    "القيم الاقتصادية تقديرات اختبار وليست إحصاءات سوقية رسمية."
+  ]
+}

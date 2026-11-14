@@ -1,0 +1,14 @@
+model Company {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(80)
+  employees Employee[]
+}
+
+model Employee {
+  id Int @id @default(autoincrement())
+  company_id Int
+  name String @db.VarChar(80)
+  email String @unique
+  salary Decimal @db.Decimal(10, 2)
+  company Company @relation(fields: [company_id], references: [id])
+}

@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-11-14T03:28:11.372Z",
+  "node": "v24.22.1",
+  "rows": 20000,
+  "cells": 240000,
+  "valid": true,
+  "outputBytes": 4853724,
+  "elapsedMs": 18171,
+  "rssBefore": 75317248,
+  "rssAfter": 132173824,
+  "maxRssKiB": 141712,
+  "note": "Single numeric workload on this development machine; not a production capacity or concurrency certification."
+}

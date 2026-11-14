@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "domain": "commerce",
+  "seed": 42,
+  "tables": [
+    {
+      "name": "products",
+      "count": 50,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "semantic": "product"
+        },
+        {
+          "name": "price",
+          "type": "decimal",
+          "nullable": false,
+          "semantic": "price",
+          "min": 30,
+          "max": 2000,
+          "precision": 10,
+          "scale": 2
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "SAR"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "customers",
+      "count": 100,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "nullable": false,
+          "semantic": "name"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "nullable": false,
+          "semantic": "email"
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "nullable": false,
+          "semantic": "city"
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [
+        [
+          "email"
+        ]
+      ],
+      "foreignKeys": []
+    },
+    {
+      "name": "orders",
+      "count": 100,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "customer_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "total",
+          "type": "decimal",
+          "nullable": false,
+          "precision": 12,
+          "scale": 2
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "SAR"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "customer_id"
+          ],
+          "table": "customers",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "order_items",
+      "count": 200,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "order_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "product_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "nullable": false,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "name": "unit_price",
+          "type": "decimal",
+          "nullable": false,
+          "precision": 10,
+          "scale": 2
+        },
+        {
+          "name": "discount",
+          "type": "decimal",
+          "nullable": false,
+          "values": [
+            0.1
+          ],
+          "precision": 4,
+          "scale": 2
+        },
+        {
+          "name": "total",
+          "type": "decimal",
+          "nullable": false,
+          "precision": 12,
+          "scale": 2
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "order_id"
+          ],
+          "table": "orders",
+          "references": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "product_id"
+          ],
+          "table": "products",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "count": 100,
+      "fields": [
+        {
+          "name": "id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "order_id",
+          "type": "integer",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "decimal",
+          "nullable": false,
+          "precision": 12,
+          "scale": 2
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "nullable": false,
+          "values": [
+            "مدفوع"
+          ]
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "order_id"
+          ],
+          "table": "orders",
+          "references": [
+            "id"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "kind": "mirror",
+      "table": "order_items",
+      "field": "unit_price",
+      "sourceTable": "products",
+      "sourceKey": "id",
+      "foreignKey": "product_id",
+      "sourceField": "price"
+    },
+    {
+      "kind": "rollup",
+      "table": "orders",
+      "field": "total",
+      "childTable": "order_items",
+      "childForeignKey": "order_id",
+      "parentKey": "id",
+      "childField": "total"
+    },
+    {
+      "kind": "mirror",
+      "table": "payments",
+      "field": "amount",
+      "sourceTable": "orders",
+      "sourceKey": "id",
+      "foreignKey": "order_id",
+      "sourceField": "total"
+    },
+    {
+      "kind": "finance",
+      "table": "order_items",
+      "quantity": "quantity",
+      "price": "unit_price",
+      "discount": "discount",
+      "taxRate": 0,
+      "total": "total",
+      "taxInclusive": false
+    }
+  ],
+  "assumptions": [
+    "جميع السجلات اصطناعية؛ أرقام الاتصال غير مخصصة للاستخدام الفعلي.",
+    "القيم الاقتصادية تقديرات اختبار وليست إحصاءات سوقية رسمية.",
+    "لا تضاف ضريبة تلقائياً. يلزم تحديد المعاملة الضريبية ومراجعتها قبل استخدام ضريبة في البيانات."
+  ]
+}
