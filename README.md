@@ -1,6 +1,8 @@
 # RASD | AI-Powered Data Platform
 
-Developed for the **Tuwaiq and Replit Hackathon**.
+Developed with my team for the **Tuwaiq and Replit Hackathon**.
+
+**Team:** [@mohamed-alghazi](https://github.com/mohamed-alghazi) · [@mirroredmohammed](https://github.com/mirroredmohammed) · [@aysaama](https://github.com/aysaama)
 
 ![RASD application homepage](docs/images/rasd-homepage.png)
 
